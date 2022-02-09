@@ -36,23 +36,22 @@
         </template>
       </v-data-table>
 
-      {{ doWarmGetter }}
+      <h5 class="mt-5">Доступные данные</h5>
+      <button type="button" class="btn btn-primary btn-sm" @click="doWarmActions()">Обновить</button>
 
       <v-data-table
           :headers="headers1"
           :items="this.doWarmGetter"
           hide-default-footer
           class="elevation-1 mt-3">
-<!--        <template v-slot:item.actions="{ item }">-->
-<!--          <button type="button" class="btn btn-primary btn-sm">Перейти к отправке</button>-->
-<!--        </template>-->
+        <template v-slot:item.actions="{ item }">
+          <button type="button" class="btn btn-primary btn-sm" @click="toKafka(item)">Перейти к отправке данных</button>
+        </template>
       </v-data-table>
-
-
 
     </div>
 <!--    <Warm :reportWarming="reportWarming" @transmit="getID" v-if="reportWarming.length"></Warm>-->
-    <Kafka v-if="flag && reportWarming.length"></Kafka>
+    <Kafka v-if="flag" :tableName="tableName" :clear="clear"></Kafka>
 
 <!--    <Warm :reportWarming="reportWarming" @transmit="getID"></Warm>-->
 <!--    <Kafka></Kafka>-->
@@ -75,7 +74,7 @@ export default {
         // { text: 'Дата и вре', value: 'created' },
         { text: 'Дата и время загрузки', value: 'complit' },
         { text: 'Оригинальное имя файла', value: 'orginal_filename' },
-        { text: 'Имя файла на диске', value: 'store_filename' },
+        { text: 'Имя файла на сервере', value: 'store_filename' },
         { text: 'Директория на сервере', value: 'store_path' },
         { text: 'Завершено', value: 'isdone' },
         { text: 'Ошибка', value: 'iserror' },
@@ -85,12 +84,12 @@ export default {
     headers1 () {
       return [
         { text: 'ID', value: 'guid' },
-        { text: 'Created', value: 'db_schema' },
-        { text: 'Количество строк подготовлено', value: 'qty_row_cashed' },
-        { text: 'Общее количество строк', value: 'qty_row_source' },
-        { text: 'Общее количество строк', value: 'ref_data_source' },
-        { text: 'Original filename', value: 'ref_source_table' },
-        { text: 'Таблица', value: 'vdwh_tablename' },
+        { text: 'Количество строк подготовлено', value: 'qty_row_cashed'},
+        { text: 'Общее количество строк', value: 'qty_row_cashed' },
+        { text: 'Data source', value: 'ref_data_source' },
+        { text: 'Source table', value: 'ref_source_table' },
+        { text: 'Схема в БД', value: 'db_schema' },
+        { text: 'Таблица в БД', value: 'vdwh_tablename' },
         { text: 'Завершено', value: 'warming_done' },
         { text: '', value: 'actions' },
       ]
@@ -109,7 +108,8 @@ export default {
       UUID: '',
       description: 'upload_tasks',
       reportWarming: [],
-
+      tableName: '',
+      clear: false
     }
   },
   mounted() {
@@ -121,18 +121,46 @@ export default {
   },
 
   methods: {
-    getID(item) {
+    // getID(item) {
+    //   console.log(item)
+    //   this.flag = true
+    // },
+    toKafka(item) {
       console.log(item)
       this.flag = true
+      this.clear = true
+      this.tableName = item.vdwh_tablename
+      console.log('Выбрана таблица ', this.tableName)
     },
 
     async toConvert(item) {
-      console.log(item.guid)
+      console.log(item.orginal_filename)
+      // 6bd40064-4b92-17c8-22a2-c51f48677f4e - 1
+      // d1db72c1-f33d-277b-ead0-afd249cc9dd5 - 4
+      // eb7a62c0-11d4-7430-295c-ef3893cf69ad - 3
+      // 00bd085a-3f6d-ac18-2705-addfc2739bb8 - 2
+
+      let id
+
+      if (item.orginal_filename === 'ИД1.xlsx') {
+        id = '6bd40064-4b92-17c8-22a2-c51f48677f4e'
+        console.log('Выбран ID ', id)
+      } else if (item.orginal_filename === 'ИД2.xlsx') {
+        id = '00bd085a-3f6d-ac18-2705-addfc2739bb8'
+        console.log('Выбран ID ', id)
+      } else if (item.orginal_filename === 'ИД3.xlsx') {
+        id = 'eb7a62c0-11d4-7430-295c-ef3893cf69ad'
+        console.log('Выбран ID ', id)
+      } else {
+        id = 'd1db72c1-f33d-277b-ead0-afd249cc9dd5'
+        console.log('Выбран ID ', id)
+      }
+
       const data = {
         realm: "bi-project-05",
-        datasourceobject: "d1db72c1-f33d-277b-ead0-afd249cc9dd5",
+        datasourceobject: id,
         rows: 100,
-        step: 100
+        step: 50000
       }
 
       await axios.post('http://10.33.8.109:9097/WarmDataSource',
@@ -213,7 +241,7 @@ export default {
       // form.append('file', file);
       // console.log(file)
 
-      await axios.post('http://localhost:8082/upload/', form,
+      await axios.post('http://10.33.8.109:8083/api/v1/upload/', form,
           {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -273,3 +301,18 @@ export default {
 
 }
 </script>
+
+<style>
+/*.v-data-table > .v-data-table__wrapper > table > tbody > tr > th,*/
+/*.v-data-table > .v-data-table__wrapper > table > thead > tr > th,*/
+/*.v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {*/
+/*  font-size: 10px !important;*/
+/*}*/
+
+
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+  font-family: Montserrat;
+  font-size: 14px !important;
+}
+
+</style>

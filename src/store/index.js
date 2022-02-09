@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
+import notify from "@/store/notify";
 
 Vue.use(Vuex)
 
@@ -10,7 +11,7 @@ export default new Vuex.Store({
   },
   mutations: {
     doWarmMutations(state, data) {
-      console.log('warm mutations', data)
+      // console.log('warm mutations', data)
       state.reportWarming = data
 
     }
@@ -36,13 +37,13 @@ export default new Vuex.Store({
       //   },
       //   body: JSON.stringify(data)
       //
-      // }).then(res => {
-      //   console.log(res)
       // })
-      //
-      // headers: {
-      //   'Content-type': 'application/json'
-      // },
+
+      // response.json().then(e => {
+      //   commit('doWarmMutations', e)
+      //     }
+      // )
+
 
       await axios.post('http://10.33.8.109:9040/DataSource/GetData',
           data, {
@@ -52,8 +53,10 @@ export default new Vuex.Store({
           }
       )
           .then(response => {
-            console.log('warm', response)
-            commit('doWarmMutations', response.data)
+            if (response.status === 200) {
+              // console.log('warm', response)
+              commit('doWarmMutations', response.data)
+            }
           })
           .catch(error => {
             console.log(error);
@@ -67,5 +70,6 @@ export default new Vuex.Store({
 
   },
   modules: {
+    notify
   }
 })

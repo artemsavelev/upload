@@ -9,7 +9,9 @@
 <!--      <router-link to="/upload" class="m-5">Upload</router-link>-->
 <!--      <router-link to="/kafka">Warm</router-link>-->
 <!--    </div>-->
-    <router-view/>
+<!--    <router-view/>-->
+    <Upload/>
+    <Notify/>
   </div>
 </template>
 
@@ -36,3 +38,10 @@
   color: #f88315;
 }
 </style>
+<script>
+import Upload from "@/views/Upload";
+import Notify from "@/components/Notify";
+export default {
+  components: {Upload, Notify}
+}
+</script>
