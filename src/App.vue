@@ -1,16 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav class="navbar navbar-light" style="background-color: #ee8913;">
+      <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Omega</span>
+      </div>
+    </nav>
+<!--    <div id="nav">-->
+<!--      <router-link to="/upload" class="m-5">Upload</router-link>-->
+<!--      <router-link to="/kafka">Warm</router-link>-->
+<!--    </div>-->
     <router-view/>
   </div>
 </template>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
+  font-family: Montserrat, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -27,6 +33,6 @@
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #f88315;
 }
 </style>

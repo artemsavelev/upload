@@ -7,17 +7,29 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11",
+    "axios": "^0.25.0",
+    "bootstrap": "^5.1.3",
+    "bootstrap-vue": "^2.21.2",
+    "core-js": "^3.21.0",
+    "vue": "^2.6.10",
     "vue-router": "^3.2.0",
+    "vuetify": "^2.6.3",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@mdi/font": "^6.1.95",
+    "@mdi/js": "^6.1.95",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "vue-template-compiler": "^2.6.11"
+    "deepmerge": "^4.2.2",
+    "sass": "~1.32",
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-vuetify": "^2.4.5",
+    "vue-loader": "^15.9.8",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.7.3"
   },
   "browserslist": [
     "> 1%",
